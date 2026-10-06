@@ -22,7 +22,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,6 +43,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('bmm_user', JSON.stringify(data.user));
       navigate('/');
     } catch (error) {
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        throw new Error('Unable to connect to the server. Please check your internet connection or backend URL and try again.');
+      }
       throw error;
     }
   };
