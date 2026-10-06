@@ -75,7 +75,8 @@ app.post('/api/transactions/sale', authenticate, (req, res) => {
   const { customer_id, total_amount, amount_paid, credit_amount, remarks } = req.body;
   const invoice_id = `INV-${Math.floor(100000 + Math.random() * 900000)}`;
   const ledger_id = `LEDG-${Math.floor(100000 + Math.random() * 900000)}`;
-  const { employee_id, branch_id } = req.user;
+  const employee_id = req.user.employee_id;
+  const branch_id = req.user.branch_id || 'BR001';
 
   db.serialize(() => {
     db.run("BEGIN TRANSACTION");
@@ -106,7 +107,8 @@ app.post('/api/transactions/payment', authenticate, (req, res) => {
   const { customer_id, amount, payment_method, remarks } = req.body;
   const payment_id = `PAY-${Math.floor(100000 + Math.random() * 900000)}`;
   const ledger_id = `LEDG-${Math.floor(100000 + Math.random() * 900000)}`;
-  const { employee_id, branch_id } = req.user;
+  const employee_id = req.user.employee_id;
+  const branch_id = req.user.branch_id || 'BR001';
 
   db.serialize(() => {
     db.run("BEGIN TRANSACTION");
